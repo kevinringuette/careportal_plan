@@ -1,13 +1,627 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>temp-app</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orange County CarePortal Strategic Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    :root {
+      --orange: #f56600;
+      --orange-light: #ffb38e;
+      --gray: #737373;
+      --gray-soft: #cbcbca;
+      --teal: #00b0b3;
+      --green: #95cc7d;
+      --yellow: #f1dd3f;
+      --bg: #ffffff;
+      --panel: #f7f7f7;
+      --border: #e5e5e5;
+      --text: #2d2d2d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at 12% 20%, rgba(245, 102, 0, 0.08), transparent 35%),
+        radial-gradient(circle at 82% 8%, rgba(0, 176, 179, 0.08), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 24px clamp(16px, 4vw, 48px) 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--gray);
+    }
+
+    .brand span {
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 14px;
+      border: 1px solid #e05a00;
+    }
+
+    nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--orange);
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      background: #ffffff;
+    }
+
+    nav a:hover { background: var(--orange); color: #ffffff; }
+
+    .hero {
+      padding: 0 clamp(16px, 4vw, 48px) 24px;
+    }
+
+    .hero-card {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 28px;
+      padding: clamp(20px, 4vw, 36px);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (max-width: 960px) { .hero-card { grid-template-columns: 1fr; } }
+
+    h1 { font-size: clamp(32px, 4vw, 44px); margin: 0 0 16px; color: var(--orange); }
+
+    .muted { color: var(--gray); margin: 0; }
+
+    .pill-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 24px; }
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--gray);
+      font-weight: 700;
+      border: 1px solid var(--border);
+    }
+
+    .cta-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+    .btn {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--orange);
+      background: var(--orange);
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(245, 102, 0, 0.32);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn.secondary { background: #ffffff; color: var(--gray); box-shadow: none; border: 1px solid var(--gray-soft); }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(245, 102, 0, 0.4); }
+
+    .map-card {
+      background: linear-gradient(150deg, rgba(0, 176, 179, 0.12), rgba(245, 102, 0, 0.08));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-card svg { width: 100%; height: auto; display: block; }
+
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+    .legend span { display: inline-flex; align-items: center; gap: 8px; color: var(--gray); font-weight: 700; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.06); }
+
+    section { padding: 28px clamp(16px, 4vw, 48px); }
+
+    .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .section-title h2 { margin: 0; font-size: 26px; color: var(--text); }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover { transform: translateY(-4px); border-color: var(--orange); box-shadow: 0 14px 32px rgba(0,0,0,0.08); }
+
+    .card h3 { margin: 0 0 10px; font-size: 18px; color: var(--text); }
+
+    .tag { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(0, 176, 179, 0.1); color: var(--teal); font-weight: 800; margin-bottom: 10px; font-size: 12px; border: 1px solid rgba(0, 176, 179, 0.2); }
+
+    .roles-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tab-btn {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--gray);
+      cursor: pointer;
+      font-weight: 800;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active { border-color: var(--orange); background: rgba(245, 102, 0, 0.08); color: var(--text); }
+
+    .roles-content { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .roles-content ul { margin: 6px 0 0 18px; color: var(--gray); padding-left: 16px; }
+
+    .icon-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .icon-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--gray);
+      font-weight: 700;
+    }
+
+    .icon-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(0, 176, 179, 0.12);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(0, 176, 179, 0.24);
+    }
+
+    .flow {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    .flow-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+    .progress {
+      width: 100%; height: 10px;
+      background: var(--panel);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-inner {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--orange));
+      transition: width 0.35s ease;
+    }
+
+    .flow-body { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: center; }
+    @media (max-width: 900px) { .flow-body { grid-template-columns: 1fr; } }
+
+    .phase-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 260px;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .phase-title { margin: 0 0 8px; font-size: 20px; color: var(--text); }
+    .phase-time { color: var(--gray); font-weight: 700; margin-bottom: 8px; }
+    .phase-steps { margin: 0; padding-left: 18px; color: var(--gray); }
+    .phase-steps li { margin-bottom: 6px; }
+
+    .phase-graphic {
+      background: linear-gradient(135deg, rgba(0, 176, 179, 0.12), rgba(245, 102, 0, 0.12));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--gray);
+    }
+
+    .phase-graphic .icon { font-size: 48px; margin-bottom: 10px; }
+
+    .flow-actions { display: flex; align-items: center; gap: 10px; }
+    .ghost-btn {
+      border: 1px solid var(--gray);
+      background: #ffffff;
+      color: var(--gray);
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+    }
+    .ghost-btn:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-1px); }
+
+    footer {
+      text-align: center;
+      padding: 24px 12px 40px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span>CarePortal</span>Orange County Strategic Plan</div>
+    <nav>
+      <a href="#map">Region map</a>
+      <a href="#roles">Roles</a>
+      <a href="#icons">Iconography</a>
+      <a href="#flow">Plan Flow</a>
+      <a href="#targets">Targets</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-card">
+      <div>
+        <h1>Countywide CarePortal Strategic Plan</h1>
+        <p class="muted">Build a connected South, Central, and North network to meet 70%+ of vetted requests across Orange County within 12 months.</p>
+        <div class="pill-row">
+          <span class="pill">Regional Leads: Dante (South), Trellis rep (Central), OC United rep (North)</span>
+          <span class="pill">County Lead: Kevin</span>
+          <span class="pill">12-month horizon</span>
+        </div>
+        <div class="cta-group">
+          <button class="btn" onclick="document.getElementById('flow').scrollIntoView({behavior:'smooth'})">View interactive plan</button>
+          <button class="btn secondary" onclick="document.getElementById('roles').scrollIntoView({behavior:'smooth'})">See responsibilities</button>
+        </div>
+      </div>
+      <div class="map-card" id="map">
+        <svg viewBox="0 0 320 240" aria-label="Orange County regions map">
+          <defs>
+            <linearGradient id="southGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--orange)" stop-opacity="0.9" />
+              <stop offset="100%" stop-color="var(--orange-light)" stop-opacity="0.8" />
+            </linearGradient>
+            <linearGradient id="centralGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--teal)" stop-opacity="0.8" />
+              <stop offset="100%" stop-color="#26c7ca" stop-opacity="0.9" />
+            </linearGradient>
+            <linearGradient id="northGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--gray)" stop-opacity="0.85" />
+              <stop offset="100%" stop-color="#9b9b9b" stop-opacity="0.9" />
+            </linearGradient>
+          </defs>
+          <path d="M30 40 C120 10, 220 20, 280 60 L290 120 C260 170, 200 210, 120 205 L40 180 Z" fill="#ffffff" stroke="var(--border)" stroke-width="2" />
+          <path d="M40 180 L120 205 C120 205, 130 160, 140 120 C120 100, 90 80, 60 70 L40 180 Z" fill="url(#southGrad)" opacity="0.9" />
+          <path d="M140 120 C160 110, 200 100, 240 120 L260 80 C220 40, 160 30, 120 40 C90 55, 70 65, 60 70 C80 80, 110 95, 140 120 Z" fill="url(#centralGrad)" opacity="0.9" />
+          <path d="M240 120 C260 130, 270 150, 250 190 L200 210 C200 210, 170 180, 140 120 C170 110, 210 100, 240 120 Z" fill="url(#northGrad)" opacity="0.9" />
+          <line x1="140" y1="120" x2="120" y2="205" stroke="#ffffff" stroke-dasharray="6 6" />
+          <line x1="140" y1="120" x2="260" y2="80" stroke="#ffffff" stroke-dasharray="6 6" />
+          <text x="85" y="150" fill="#ffffff" font-size="14" font-weight="700">South</text>
+          <text x="150" y="90" fill="#ffffff" font-size="14" font-weight="700">Central</text>
+          <text x="200" y="160" fill="#ffffff" font-size="14" font-weight="700">North</text>
+        </svg>
+        <div class="legend">
+          <span><span class="dot" style="background:var(--orange)"></span>South (Dante / Saddleback)</span>
+          <span><span class="dot" style="background:var(--teal)"></span>Central (Trellis rep)</span>
+          <span><span class="dot" style="background:var(--gray)"></span>North (OC United rep)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roles">
+    <div class="section-title"><h2>Roles & Responsibilities</h2><span class="pill">Clarify your part</span></div>
+    <div class="roles-tabs" id="roleTabs"></div>
+    <div class="roles-content" id="roleContent"></div>
+  </section>
+
+  <section id="icons">
+    <div class="section-title"><h2>CarePortal Iconography</h2><span class="pill">Use teal-first visuals</span></div>
+    <p class="muted">Keep icons simple, teal-forward, and supportive of the story. Primary set mirrors CarePortal guidance for children, churches, agencies, prayer, and home/shelter, with supporting visuals for transportation, essentials, and celebration.</p>
+    <div class="icon-gallery">
+      <div class="icon-card"><div class="icon-mark">👧</div>Child / Children</div>
+      <div class="icon-card"><div class="icon-mark">⛪</div>Church / Religious Organization</div>
+      <div class="icon-card"><div class="icon-mark">🏛️</div>Government / Agency</div>
+      <div class="icon-card"><div class="icon-mark">🙏</div>Praying / Religious</div>
+      <div class="icon-card"><div class="icon-mark">🏠</div>Home / Shelter</div>
+      <div class="icon-card"><div class="icon-mark">🧸</div>Care Essentials</div>
+      <div class="icon-card"><div class="icon-mark">🚙</div>Transportation & Delivery</div>
+      <div class="icon-card"><div class="icon-mark">🛏️</div>Bedding & Household</div>
+      <div class="icon-card"><div class="icon-mark">🎉</div>Celebration & Milestones</div>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="section-title"><h2>Interactive Strategic Flow</h2><span class="pill">Tap next to advance</span></div>
+    <div class="flow">
+      <div class="flow-header">
+        <div>
+          <div class="pill" id="phaseTimeline">Months 1–3</div>
+          <h3 id="phaseTitle" style="margin:8px 0 0">Phase 1 — Regional Network Formation</h3>
+        </div>
+        <div class="flow-actions">
+          <button class="ghost-btn" id="prevBtn">◀ Previous</button>
+          <button class="btn" id="nextBtn">Next ▶</button>
+        </div>
+      </div>
+      <div class="progress"><div class="progress-inner" id="progressInner"></div></div>
+      <div class="flow-body">
+        <div class="phase-card" id="phaseCard">
+          <div class="phase-time" id="phaseTarget">Timeline: Months 1–3 | Goal: Regional network formation</div>
+          <ul class="phase-steps" id="phaseSteps"></ul>
+        </div>
+        <div class="phase-graphic" id="phaseGraphic">
+          <div class="icon" id="phaseIcon">🌐</div>
+          <div id="phaseGraphicText">Stand up South, Central, North networks with clear boundaries and rhythms.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="targets">
+    <div class="section-title"><h2>Year-1 Targets</h2><span class="pill">What success looks like</span></div>
+    <div class="card-grid">
+      <div class="card"><span class="tag">Coverage</span><h3>10+ launch-ready churches per region</h3><p class="muted">PPP, Pastors, Team Leaders in place with tuned response team settings and at least one live response.</p></div>
+      <div class="card"><span class="tag">Outcomes</span><h3>70%+ of vetted requests met</h3><p class="muted">Measured across agency- and church-vetted needs; monitor response time and economic impact.</p></div>
+      <div class="card"><span class="tag">Funding & cards</span><h3>1–2 Connecting Churches per region</h3><p class="muted">Ready to steward community funds via CarePortal Cards and take the lead on funded requests.</p></div>
+      <div class="card"><span class="tag">OCSS</span><h3>Soft launch then scale countywide</h3><p class="muted">Onboard a small OCSS cohort, validate workflow, then expand to full coverage once metrics hold.</p></div>
+    </div>
+  </section>
+
+  <footer>Built for a unified Orange County response—South, Central, and North moving together.</footer>
+
+  <script>
+    const roles = [
+      {
+        name: 'County Lead (Kevin)',
+        responsibilities: [
+          'Oversees health of church networks, milestones, and countywide metrics.',
+          'Convenes monthly rhythm with regional leads; aligns with state/national CarePortal staff.',
+          'Confirms geographic coverage, data quality, and readiness before inviting OCSS.'
+        ]
+      },
+      {
+        name: 'Regional Lead — South (Dante / Saddleback)',
+        responsibilities: [
+          'Act as Community Coordinator & Church Ambassador hybrid for South OC.',
+          'Recruit and coach launch-ready churches; celebrate milestones.',
+          'Identify communities of critical need and align response team settings.'
+        ]
+      },
+      {
+        name: 'Regional Lead — Central (Trellis rep)',
+        responsibilities: [
+          'Guide Central churches through role setup, training, and first responses.',
+          'Activate Connecting Church and church-vetted strategies in high-need pockets.',
+          'Maintain monthly metrics pulse and stories for the region.'
+        ]
+      },
+      {
+        name: 'Regional Lead — North (OC United rep)',
+        responsibilities: [
+          'Shepherd North network churches toward launch-ready status.',
+          'Coach Team Leaders on “Provide vs Fund” and CarePortal Card usage.',
+          'Ensure at least one Connecting Church is prepared to steward community responders.'
+        ]
+      },
+      {
+        name: 'Pastors & Primary Point Persons',
+        responsibilities: [
+          'Own church vision, settings, and leader access in the dashboard.',
+          'Ensure at least one response team is configured with radius, request types, and activation preferences.',
+          'Complete training touchpoints and model the first live response to a request.'
+        ]
+      },
+      {
+        name: 'Team Leaders / Connecting Church Leaders',
+        responsibilities: [
+          'Manage responders, approvals, and team activation style; keep response cadence healthy.',
+          'Take the lead on funded requests, coordinate with caseworkers, and steward CarePortal Card spend.',
+          'Submit or approve church-vetted requests in key neighborhoods to surface needs early.'
+        ]
+      }
+    ];
+
+    const phases = [
+      {
+        title: 'Phase 1 — Regional Network Formation',
+        timeline: 'Months 1–3',
+        target: 'Regional network formation',
+        icon: '🌐',
+        graphic: 'Stand up South, Central, North networks with boundaries and rhythms.',
+        steps: [
+          'Confirm roles & responsibilities: Regional Leads as Community Coordinator / Church Ambassador hybrids; County Lead as Regional Manager.',
+          'Map South, Central, North boundaries; tag communities of critical need for responder opt-in.',
+          'Create shared comms channels and monthly cadence for metrics, problem-solving, and celebrations.'
+        ]
+      },
+      {
+        title: 'Phase 2 — Church Recruitment & Onboarding',
+        timeline: 'Months 2–9',
+        target: '10+ launch-ready churches per region',
+        icon: '⛪',
+        graphic: 'Define launch-ready churches, configure roles, and practice a first response.',
+        steps: [
+          'Set Primary Point Person, Pastors, and Team Leaders; add Connecting Church Leader / CVRL where strategic.',
+          'Configure response team radius, request types, and approval/activation preferences.',
+          'Train on responding (Provide vs Fund) and complete at least one live request together.'
+        ]
+      },
+      {
+        title: 'Phase 3 — Nonprofit & Church-Vetted Pipelines',
+        timeline: 'Months 3–12',
+        target: 'Surface needs beyond agency requests',
+        icon: '🤝',
+        graphic: 'Empower church-vetted requests and Connecting Church pathways.',
+        steps: [
+          'Coach anchor churches to submit and approve church-vetted requests for high-need pockets.',
+          'Train Connecting Churches to steward community funds via CarePortal Cards.',
+          'Ensure funded requests flow through churches; set Connecting Church radius expectations.'
+        ]
+      },
+      {
+        title: 'Phase 4 — Regional Health, Metrics & Feedback',
+        timeline: 'Continuous',
+        target: 'Healthy response engine',
+        icon: '📊',
+        graphic: 'Track coverage, speed, milestones, card/fund usage, and stories.',
+        steps: [
+          'Review active churches, children served, and % needs met (agency vs church-vetted).',
+          'Tune response team settings (radius, activation style, approvals) based on load.',
+          'Celebrate milestones, collect stories, and monitor CarePortal Card/Fund stewardship.'
+        ]
+      },
+      {
+        title: 'Phase 5 — Prepare & Onboard OCSS',
+        timeline: 'Months 6–12',
+        target: 'Invite agency partners well',
+        icon: '🏛️',
+        graphic: 'Soft-launch OCSS caseworkers once coverage and success metrics are proven.',
+        steps: [
+          'Validate readiness: coverage, metrics (70%+), and Connecting Churches in each region.',
+          'Align with OCSS leaders; provide clear request-entry and response visibility walkthrough.',
+          'Run a soft launch with selected ZIPs and workers; then scale countywide as performance holds.'
+        ]
+      },
+      {
+        title: 'Phase 6 — Long-Term Sustainability & Growth',
+        timeline: 'Annual',
+        target: 'Ecosystem renewal',
+        icon: '🌱',
+        graphic: 'Expand leaders, Connecting Churches, and annual goals to prevent burnout.',
+        steps: [
+          'Develop new Team Leaders, CCLs, and CVRLs in growing churches.',
+          'Add Connecting Churches so every pocket has a steward for community funds.',
+          'Conduct annual review: % needs met, gaps, card/fund usage, and targets for the coming year.'
+        ]
+      }
+    ];
+
+    const roleTabs = document.getElementById('roleTabs');
+    const roleContent = document.getElementById('roleContent');
+    const phaseTitle = document.getElementById('phaseTitle');
+    const phaseTimeline = document.getElementById('phaseTimeline');
+    const phaseTarget = document.getElementById('phaseTarget');
+    const phaseSteps = document.getElementById('phaseSteps');
+    const phaseGraphicText = document.getElementById('phaseGraphicText');
+    const phaseIcon = document.getElementById('phaseIcon');
+    const progressInner = document.getElementById('progressInner');
+    const phaseCard = document.getElementById('phaseCard');
+    const phaseGraphic = document.getElementById('phaseGraphic');
+
+    let activeRole = 0;
+    let activePhase = 0;
+
+    const renderRoles = () => {
+      roleTabs.innerHTML = '';
+      roleContent.innerHTML = '';
+      roles.forEach((role, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn' + (index === activeRole ? ' active' : '');
+        btn.textContent = role.name;
+        btn.onclick = () => { activeRole = index; renderRoles(); };
+        roleTabs.appendChild(btn);
+        if (index === activeRole) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const h3 = document.createElement('h3');
+          h3.textContent = role.name;
+          card.appendChild(h3);
+          const list = document.createElement('ul');
+          role.responsibilities.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+          });
+          card.appendChild(list);
+          roleContent.appendChild(card);
+        }
+      });
+    };
+
+    const renderPhase = () => {
+      const phase = phases[activePhase];
+      phaseTitle.textContent = phase.title;
+      phaseTimeline.textContent = phase.timeline;
+      phaseTarget.textContent = `Timeline: ${phase.timeline} | Goal: ${phase.target}`;
+      phaseGraphicText.textContent = phase.graphic;
+      phaseIcon.textContent = phase.icon;
+      phaseSteps.innerHTML = '';
+      phase.steps.forEach(step => {
+        const li = document.createElement('li');
+        li.textContent = step;
+        phaseSteps.appendChild(li);
+      });
+      const progress = ((activePhase + 1) / phases.length) * 100;
+      progressInner.style.width = `${progress}%`;
+      phaseCard.animate([
+        { transform: 'translateX(12px)', opacity: 0 },
+        { transform: 'translateX(0)', opacity: 1 }
+      ], { duration: 350, easing: 'ease-out' });
+      phaseGraphic.animate([
+        { transform: 'scale(0.96)', opacity: 0 },
+        { transform: 'scale(1)', opacity: 1 }
+      ], { duration: 350, easing: 'ease-out' });
+    };
+
+    document.getElementById('nextBtn').onclick = () => {
+      activePhase = (activePhase + 1) % phases.length;
+      renderPhase();
+    };
+    document.getElementById('prevBtn').onclick = () => {
+      activePhase = (activePhase - 1 + phases.length) % phases.length;
+      renderPhase();
+    };
+
+    renderRoles();
+    renderPhase();
+  </script>
+</body>
 </html>
